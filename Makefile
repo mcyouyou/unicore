@@ -18,6 +18,14 @@ clean_model:
 	@echo "Cleaning up generated files..."
 	@rm -rf $(MODEL_OUT_DIR)/*
 
-# 重新编译
+# 重新编译 proto
 .PHONY: regen_model
 regen_model: clean_model gen_model
+
+# 删掉kind集群
+delete-cluster:
+	kind delete  cluster --name=dev
+
+# 构建kind集群
+build-cluster:
+	kind create cluster --config ./hack/kind-multi-one.yaml --image=kindest/node:v1.30.0 --name=dev
