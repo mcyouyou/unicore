@@ -1,11 +1,11 @@
-export PATH="$PATH:../istio-1.22.2/bin"
-FILE=bookinfo.yaml
+export PATH="$PATH:./istio-1.22.2/bin"
+FILE=./samples/bookinfo.yaml
 
 #部署应用
-kubectl create deployment hello-minikube --image=kicbase/echo-server:1.0
-kubectl expose deployment hello-minikube --type=NodePort --port=8080
+#kubectl create deployment hello-minikube --image=kicbase/echo-server:1.0
+#kubectl expose deployment hello-minikube --type=NodePort --port=8080
 
-kubectl get services hello-minikube
+#kubectl get services hello-minikube
 
 
 #部署bookinfo.yaml应用
