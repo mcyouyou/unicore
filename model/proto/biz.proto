@@ -16,7 +16,8 @@ message Service {
 message ServiceOption{
   bool stateful = 1;
   int32 replicas = 2;
-  ResourceOption resource = 3;
+  bool withStagingEnv = 3;
+  ResourceOption resource = 4;
 }
 
 message ResourceOption{
