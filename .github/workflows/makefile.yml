@@ -30,11 +30,5 @@ jobs:
     - name: Chmod Bash
       run: chmod -R 777 ./hack/gen_proto_model.sh
     
-    - name: Install dependencies
-      run: make
-
-    - name: Run check
-      run: make check
-
     - name: Run Build
-      run: make build
+      run: make build-cluster
