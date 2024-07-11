@@ -17,7 +17,9 @@ jobs:
         
     - name: Cheak Go Version
       run: go version
-
+    - name: Chmod Bash
+      run: chmod -R 777 ./hack/gen_proto_model.sh
+    
     - name: Install dependencies
       run: make
 
