@@ -14,9 +14,13 @@ jobs:
     - uses: actions/setup-go@v5
       with:
         go-version: '>=1.22.0'
-        
+
     - name: Cheak Go Version
       run: go version
+    
+    - name: Install Protoc
+      uses: arduino/setup-protoc@v3
+      
     - name: Chmod Bash
       run: chmod -R 777 ./hack/gen_proto_model.sh
     
