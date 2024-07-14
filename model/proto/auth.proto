@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package auth;
+
+// 鉴权接口定义
+option go_package = "unicore/model/auth";
+
+service Auth{
+  rpc Register(RegisterReq)returns (RegisterResp);
+}
+
+message RegisterReq{
+
+}
+
+message RegisterResp{
+
+}

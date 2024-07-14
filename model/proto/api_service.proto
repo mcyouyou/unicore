@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package api_service;
+
+// /api/service 接口定义
+option go_package = "unicore/model/api_service";
+
+import "biz.proto";
+
+message CreateServiceReq{
+  string ownerId = 2;
+  repeated string admins = 3;
+  string name = 4;
+  biz.ServiceOption option = 5;
+}
+
+message CreateServiceResp{
+  bool success =1;
+  int32 id=2;
+}

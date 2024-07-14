@@ -1,0 +1,27 @@
+# permissions for end users to edit deployers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: deployer
+    app.kubernetes.io/managed-by: kustomize
+  name: deployer-editor-role
+rules:
+- apiGroups:
+  - unicore.mcyou.cn
+  resources:
+  - deployers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - unicore.mcyou.cn
+  resources:
+  - deployers/status
+  verbs:
+  - get

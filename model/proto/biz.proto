@@ -3,7 +3,7 @@ syntax = "proto3";
 package biz;
 
 // 业务 service 层的定义
-option go_package = "github.com/mcyouyou/unicore/model/biz";
+option go_package = "unicore/model/biz";
 
 message Service {
   string id = 1;
@@ -23,4 +23,5 @@ message ServiceOption{
 message ResourceOption{
   int32 cpus = 1;
   int32 memInMb = 2;
+  int32 storageMb = 3;
 }
