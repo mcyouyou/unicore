@@ -16,14 +16,16 @@ find "$PROTO_DIR" -name "*.proto" | while read -r proto_file; do
     # 获取文件名（不带扩展名）
     file_name=$(basename "$proto_file" .proto)
     # 使用文件名作为包名
-    go_package="github.com/mcyouyou/unicore/model/$file_name"
+    go_package="unicore/model/$file_name"
   fi
 
   # 输出目录
-  package_dir=$(echo "$go_package" | sed 's#github.com/mcyouyou/unicore/model/##')
+  package_dir=$(echo "$go_package" | sed 's#unicore/model/##')
   # 创建输出目录
   mkdir -p "$OUT_DIR/$package_dir"
+  mkdir -p "rpc/$package_dir"
 
-  # 编译 proto 文件
+  # 编译 proto 文件生成模型定义，以及对应 rpc 的 cli/svr
   protoc -I="$PROTO_DIR" --go_opt=paths=source_relative --go_out="$OUT_DIR/$package_dir" "$proto_file"
+  protoc -I="$PROTO_DIR" --go-grpc_opt=paths=source_relative  --go-grpc_out="$OUT_DIR/$package_dir" "$proto_file"
 done

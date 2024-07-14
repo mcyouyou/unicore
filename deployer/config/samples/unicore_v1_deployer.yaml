@@ -1,0 +1,9 @@
+apiVersion: unicore.mcyou.cn/v1
+kind: Deployer
+metadata:
+  labels:
+    app.kubernetes.io/name: deployer
+    app.kubernetes.io/managed-by: kustomize
+  name: deployer-sample
+spec:
+  # TODO(user): Add fields here

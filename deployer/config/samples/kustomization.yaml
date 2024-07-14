@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- unicore_v1_deployer.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples
