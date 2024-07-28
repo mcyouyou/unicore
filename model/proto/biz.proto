@@ -24,4 +24,5 @@ message ResourceOption{
   int32 cpus = 1;
   int32 memInMb = 2;
   int32 storageMb = 3;
+  int32 filesystemMb = 4;
 }

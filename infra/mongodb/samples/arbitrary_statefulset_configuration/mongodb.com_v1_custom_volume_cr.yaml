@@ -32,6 +32,7 @@ spec:
             name: data-volume
           spec:
             accessModes: [ "ReadWriteOnce", "ReadWriteMany" ]
+            storageClassName: ceph-sc
             resources:
               requests:
                 storage: 50Gi

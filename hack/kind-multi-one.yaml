@@ -2,6 +2,25 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
+  extraPortMappings:
+    - containerPort: 31000 # ceph dashboard
+      hostPort: 31000
+    - containerPort: 40001 # cubeuniverse dashboard
+      hostPort: 40001
+    - containerPort: 32000 # unicore web
+      hostPort: 32000
+    - containerPort: 32001 # control plane
+      hostPort: 32001
+    - containerPort: 32002 # deployer backend
+      hostPort: 32002
+    - containerPort: 32003 # cd backend
+      hostPort: 32003
+    - containerPort: 32004 # automation backend
+      hostPort: 32004
+    - containerPort: 32005 # mongodb
+      hostPort: 32005
+    - containerPort: 32006 # 备用
+      hostPort: 32006
 - role: worker
 - role: worker
 - role: worker

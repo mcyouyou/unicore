@@ -14,3 +14,6 @@ Infra encompasses multiple services, such as traffic control, service discovery,
 ## Automation
 Automation consists of multiple functions that handle automated operations, including HPA (Horizontal Pod Autoscaling),
 auto-balancing, and auto-certificate management.
+
+## Control Panel
+Backend for unicore control, 

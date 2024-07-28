@@ -29,3 +29,10 @@ delete-cluster:
 # 构建kind集群
 build-cluster:
 	kind create cluster --config ./hack/kind-multi-one.yaml --image=kindest/node:v1.30.0 --name=dev
+
+build-full-cluster:	build-cluster
+	kubectl apply -f infra/flannel/flannel.yaml
+	echo "开始安装 openebs"
+	cd infra/openebs && bash install.sh && cd ../..
+	echo "开始安装 tidb"
+	cd infra/tidb && bash install.sh

@@ -7,12 +7,35 @@ option go_package = "unicore/model/auth";
 
 service Auth{
   rpc Register(RegisterReq)returns (RegisterResp);
+  rpc Login(LoginReq) returns (LoginResp);
+  rpc VerifyToken(VerifyTokenReq) returns (VerifyTokenResp);
 }
 
 message RegisterReq{
-
+  string username = 1;
+  bytes password = 2; // 密文
 }
 
 message RegisterResp{
+  bool ok = 1;
+}
 
+message LoginReq{
+  string username = 1;
+  bytes password = 2; // 密文
+}
+
+message LoginResp{
+  bool succ = 1;
+  string token = 2;
+}
+
+message VerifyTokenReq{
+  string token = 1;
+}
+
+message VerifyTokenResp{
+  bool valid = 1;
+  string username = 2;
+  bool isAdmin = 3;
 }
