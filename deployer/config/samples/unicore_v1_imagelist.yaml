@@ -1,0 +1,12 @@
+apiVersion: unicore.mcyou.cn/v1
+kind: ImageList
+metadata:
+  labels:
+    app.kubernetes.io/name: deployer
+    app.kubernetes.io/managed-by: kustomize
+  name: dev-worker3
+  namespace: unicore
+spec:
+  images:
+    nginx:
+      alwaysPull: false

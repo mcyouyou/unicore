@@ -1,0 +1,1 @@
+kind create cluster --config kind-multi-one.yaml -n dev

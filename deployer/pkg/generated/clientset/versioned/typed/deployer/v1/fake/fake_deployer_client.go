@@ -31,6 +31,10 @@ func (c *FakeUnicoreV1) Apps(namespace string) v1.AppInterface {
 	return &FakeApps{c, namespace}
 }
 
+func (c *FakeUnicoreV1) ImageLists(namespace string) v1.ImageListInterface {
+	return &FakeImageLists{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeUnicoreV1) RESTClient() rest.Interface {

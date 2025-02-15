@@ -440,6 +440,10 @@ func (c *StateController) applyUpdate(ctx context.Context,
 
 	// for rollingUpdate strategy, we terminate the pod with the largest ordinal that does not match the updateRevision
 	updateMin := 0
+	if app.Spec.UpdateStrategy.RollingUpdate.Paused {
+		klog.InfoS("rolling update paused, skipping", "app", app.Name)
+		return &status, nil
+	}
 
 	// update can only be done for pod [partition:]
 	updateMin = int(*app.Spec.UpdateStrategy.RollingUpdate.Partition)

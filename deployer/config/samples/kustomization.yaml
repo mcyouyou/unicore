@@ -2,4 +2,5 @@
 resources:
 - unicore_v1_deployer.yaml
 - unicore_v1_app.yaml
+- unicore_v1_imagelist.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples

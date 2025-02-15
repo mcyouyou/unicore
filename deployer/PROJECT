@@ -26,4 +26,13 @@ resources:
   kind: App
   path: github.com/mcyouyou/unicore/api/v1
   version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: mcyou.cn
+  group: unicore
+  kind: ImageList
+  path: github.com/mcyouyou/unicore/api/v1
+  version: v1
 version: "3"
