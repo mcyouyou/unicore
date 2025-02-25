@@ -28,6 +28,7 @@ import (
 type UnicoreV1Interface interface {
 	RESTClient() rest.Interface
 	AppsGetter
+	ImageListsGetter
 }
 
 // UnicoreV1Client is used to interact with features provided by the unicore.mcyou.cn group.
@@ -37,6 +38,10 @@ type UnicoreV1Client struct {
 
 func (c *UnicoreV1Client) Apps(namespace string) AppInterface {
 	return newApps(c, namespace)
+}
+
+func (c *UnicoreV1Client) ImageLists(namespace string) ImageListInterface {
+	return newImageLists(c, namespace)
 }
 
 // NewForConfig creates a new UnicoreV1Client for the given config.

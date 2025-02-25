@@ -18,10 +18,11 @@ package controller
 
 import (
 	"fmt"
-	unicorev1 "github.com/mcyouyou/unicore/api/deployer/v1"
 	"path/filepath"
 	"runtime"
 	"testing"
+
+	unicorev1 "github.com/mcyouyou/unicore/api/deployer/v1"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"

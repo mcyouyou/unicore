@@ -4,6 +4,7 @@
 resources:
 - bases/unicore.mcyou.cn_deployers.yaml
 - bases/unicore.mcyou.cn_apps.yaml
+- bases/unicore.mcyou.cn_imagelists.yaml
 # +kubebuilder:scaffold:crdkustomizeresource
 
 patches:

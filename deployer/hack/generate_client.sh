@@ -1,7 +1,3 @@
-set -o errexit
-set -o nounset
-set -o pipefail
-
 SCRIPT_ROOT=$(dirname "${BASH_SOURCE[0]}")/..
 
 source /root/go/pkg/mod/k8s.io/code-generator@v0.30.1/kube_codegen.sh

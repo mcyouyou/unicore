@@ -1,0 +1,63 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: unicore
+  name: imagelist-access
+rules:
+  - apiGroups: ["unicore.mcyou.cn"]
+    resources: ["imagelists"]
+    verbs: ["get", "list", "watch", "create", "update", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: imagelist-access-binding
+  namespace: unicore
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: unicore
+roleRef:
+  kind: Role
+  name: imagelist-access
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemon
+  namespace: unicore
+  labels:
+    app: unicore
+spec:
+  selector:
+    matchLabels:
+      name: unicore-daemon
+  template:
+    metadata:
+      labels:
+        name: unicore-daemon
+    spec:
+      hostNetwork: true
+      hostPID: true
+      containers:
+        - name: daemon
+          image: unicore-daemon
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - name: containerd-sock
+              mountPath: /run/containerd/containerd.sock
+      volumes:
+        - name: containerd-sock
+          hostPath:
+            path: /run/containerd/containerd.sock
+            type: Socket
+      securityContext:
+        runAsUser: 0

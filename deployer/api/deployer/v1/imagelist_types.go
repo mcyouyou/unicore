@@ -20,22 +20,27 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const Namespace = "unicore"
-
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// DeployerSpec defines the desired state of Deployer
-type DeployerSpec struct {
+// ImageListSpec defines the desired state of ImageList.
+type ImageListSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of Deployer. Edit deployer_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// map[ImageName]ImageInfo
+	Images map[string]ImageInfo `json:"images"`
 }
 
-// DeployerStatus defines the observed state of Deployer
-type DeployerStatus struct {
+type ImageInfo struct {
+	// if true, exec docker pull for this img every 24h
+	AlwaysPull bool `json:"alwaysPull,omitempty"`
+	// expected next pulling time if AlwaysPull is true
+	NextPull metav1.Time `json:"nextPull,omitempty"`
+}
+
+// ImageListStatus defines the observed state of ImageList.
+type ImageListStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
@@ -43,24 +48,25 @@ type DeployerStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
-// Deployer is the Schema for the deployers API
-type Deployer struct {
+// ImageList is the Schema for the imagelists API.
+// +genclient
+type ImageList struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   DeployerSpec   `json:"spec,omitempty"`
-	Status DeployerStatus `json:"status,omitempty"`
+	Spec   ImageListSpec   `json:"spec,omitempty"`
+	Status ImageListStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// DeployerList contains a list of Deployer
-type DeployerList struct {
+// ImageListList contains a list of ImageList.
+type ImageListList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Deployer `json:"items"`
+	Items           []ImageList `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&Deployer{}, &DeployerList{})
+	SchemeBuilder.Register(&ImageList{}, &ImageListList{})
 }

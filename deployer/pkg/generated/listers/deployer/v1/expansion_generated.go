@@ -24,3 +24,11 @@ type AppListerExpansion interface{}
 // AppNamespaceListerExpansion allows custom methods to be added to
 // AppNamespaceLister.
 type AppNamespaceListerExpansion interface{}
+
+// ImageListListerExpansion allows custom methods to be added to
+// ImageListLister.
+type ImageListListerExpansion interface{}
+
+// ImageListNamespaceListerExpansion allows custom methods to be added to
+// ImageListNamespaceLister.
+type ImageListNamespaceListerExpansion interface{}
