@@ -92,6 +92,7 @@ func (d *Daemon) Start() error {
 
 	klog.Infof("watching imageList changes on node %s", d.NodeName)
 	go d.loopAlwaysPull()
+	go d.loopRetry()
 	for event := range watcher.ResultChan() {
 		switch event.Type {
 		case watch.Added:
