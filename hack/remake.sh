@@ -1,1 +1,1 @@
-kind delete cluster -n dev
+kind delete cluster

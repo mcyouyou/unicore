@@ -1,0 +1,124 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: unicore-scheduler
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: unicore-scheduler-role
+rules:
+  - apiGroups: [""]
+    resources:
+      - pods
+      - pods/status
+      - pods/binding
+      - pods/eviction
+      - nodes
+      - namespaces
+      - persistentvolumes
+      - persistentvolumeclaims
+      - configmaps
+      - endpoints
+      - services
+      - events
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["replicasets", "statefulsets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+  - apiGroups: ["events.k8s.io"]
+    resources: ["events"]
+    verbs: ["create", "patch", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: unicore-scheduler-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: unicore-scheduler-role
+subjects:
+  - kind: ServiceAccount
+    name: unicore-scheduler
+    namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: unicore-scheduler-as-kube-scheduler
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:kube-scheduler
+subjects:
+  - kind: ServiceAccount
+    name: unicore-scheduler
+    namespace: kube-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unicore-scheduler
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: unicore-scheduler
+  template:
+    metadata:
+      labels:
+        app: unicore-scheduler
+    spec:
+      serviceAccountName: unicore-scheduler
+      containers:
+        - name: unicore-scheduler
+          image: tksky1/unicore-scheduler-plugin:v1
+          imagePullPolicy: Always
+          command:
+            - /scheduler
+            - --config=/etc/kube-scheduler/config.yaml
+            - --leader-elect=false
+            - --v=5
+          volumeMounts:
+            - name: config
+              mountPath: /etc/kube-scheduler
+      volumes:
+        - name: config
+          configMap:
+            name: unicore-scheduler-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: unicore-scheduler-config
+  namespace: kube-system
+data:
+  config.yaml: |
+    apiVersion: kubescheduler.config.k8s.io/v1
+    kind: KubeSchedulerConfiguration
+    profiles:
+      - schedulerName: unicore-scheduler
+        plugins:
+          preFilter:
+            enabled:
+              - name: unicore-gang-scheduler
+          permit:
+            enabled:
+              - name: unicore-gang-scheduler
+          reserve:
+            enabled:
+              - name: unicore-gang-scheduler
+          queueSort:
+            enabled:
+              - name: unicore-gang-scheduler
+            disabled:
+              - name: "*"

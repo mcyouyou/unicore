@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unicore-gang-test
+  labels:
+    app: unicore-gang-test
+spec:
+  replicas: 4  # 总副本数
+  selector:
+    matchLabels:
+      app: unicore-gang-test
+  template:
+    metadata:
+      labels:
+        app: unicore-gang-test
+        gang.unicore.mcyou.cn/name: "test"  # 成组调度组名
+        gang.unicore.mcyou.cn/available-count: "4"  # 最小可用副本数
+    spec:
+      schedulerName: unicore-scheduler  # 指定自定义调度器
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: unicore-gang-test
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: nginx
+          image: nginx:1.25

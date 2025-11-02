@@ -1,0 +1,21 @@
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+clientConnection:
+  kubeconfig: "/root/.kube/config"
+profiles:
+  - schedulerName: unicore-scheduler
+    plugins:
+      preFilter:
+        enabled:
+          - name: unicore-gang-scheduler
+      permit:
+        enabled:
+           - name: unicore-gang-scheduler
+      reserve:
+        enabled:
+          - name: unicore-gang-scheduler
+      queueSort:
+        enabled:
+          - name: unicore-gang-scheduler
+        disabled:
+          - name: "*"
