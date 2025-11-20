@@ -1,0 +1,18 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+kubeadmConfigPatches:
+  - |
+    kind: ClusterConfiguration
+    apiServer:
+      certSANs:
+      - "127.0.0.1"
+      - "localhost"
+      - "0.0.0.0"
+      - "154.19.43.15"
+networking:
+  apiServerAddress: "0.0.0.0"
+  apiServerPort: 6446  # 不同端口
+nodes:
+  - role: control-plane
+  - role: worker
+  - role: worker
