@@ -18,6 +18,7 @@ import (
 
 const ReserveConfigMapName = "reservation"
 const ReserveConfigMapNamespace = "unicore"
+const ExpireCheckLoopTime = time.Second * 30
 
 type Reservation struct {
 	ReservingPod          string    `json:"pod"`
@@ -101,6 +102,8 @@ func New(_ context.Context, _ runtime.Object, handle framework.Handle) (framewor
 	if !cache.WaitForCacheSync(stopCh, r.cmInformer.HasSynced) {
 		panic("cm informer sync failed")
 	}
+
+	go r.cleanExpired()
 	return r, nil
 }
 
@@ -166,12 +169,53 @@ func (r *ReserveScheduler) Filter(ctx context.Context, state *framework.CycleSta
 				needMem += container.Resources.Requests.Memory().Value()
 			}
 			if freeCPU < needCPU || freeMem < needMem {
+				klog.Infof("reserved resource used by pod %v in namespace %s, filtering coming pod %s/%v for "+
+					"freeCPU %v < needCPU %v || freeMem %v < needMem %v", reservation.ReservingPod,
+					reservation.ReservingPodNamespace, pod.Namespace, pod.Name, freeCPU, needCPU, freeMem, needMem)
 				return framework.NewStatus(framework.Unschedulable, fmt.Sprintf("reserved resource used by pod %v "+
 					"in namespace %s", reservation.ReservingPod, reservation.ReservingPodNamespace))
 			}
 		}
 	}
 	return framework.NewStatus(framework.Success)
+}
+
+func (r *ReserveScheduler) cleanExpired() {
+	for {
+		time.Sleep(ExpireCheckLoopTime)
+		r.mu.RLock()
+		newCM := r.latestCM.DeepCopy()
+		newReservation := make(map[string][]Reservation)
+		updated := false
+		for nodeName, reservations := range r.reservation {
+			newReservation[nodeName] = make([]Reservation, 0)
+			for _, reservation := range reservations {
+				if reservation.ExpireAt.After(time.Now()) {
+					newReservation[nodeName] = append(newReservation[nodeName], reservation)
+				} else {
+					updated = true
+				}
+			}
+		}
+		if !updated {
+			r.mu.Unlock()
+			continue
+		}
+		r.reservation = newReservation
+		data, err := r.dumpToConfigMap()
+		if err != nil {
+			klog.Errorf("dump reservation to cm data err: %v", err)
+			r.mu.Unlock()
+			continue
+		}
+
+		newCM.Data = data
+		_, err = r.handle.ClientSet().CoreV1().ConfigMaps(ReserveConfigMapNamespace).Update(context.TODO(), newCM, metav1.UpdateOptions{})
+		if err != nil {
+			klog.Errorf("update reserve cm err: %v", err)
+		}
+		r.mu.RUnlock()
+	}
 }
 
 func (r *ReserveScheduler) loadFromConfigMap(data map[string]string) error {
