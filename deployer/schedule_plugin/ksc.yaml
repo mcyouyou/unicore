@@ -17,6 +17,7 @@ profiles:
       reserve:
         enabled:
           - name: unicore-gang-scheduler
+          - name: unicore-reserve-scheduler
       queueSort:
         enabled:
           - name: unicore-gang-scheduler

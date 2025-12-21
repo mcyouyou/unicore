@@ -11,11 +11,14 @@ import (
 	"os"
 )
 
+var buildTime string
+
 func main() {
 	klog.Info("starting unicore-scheduler..")
+	klog.Infof("build time: %s", buildTime)
 	command := scheduler.NewSchedulerCommand(
-		scheduler.WithPlugin("unicore-gang-scheduler", gang.New),
-		scheduler.WithPlugin("unicore-reserve-scheduler", reserve.New))
+		scheduler.WithPlugin("unicore-reserve-scheduler", reserve.New),
+		scheduler.WithPlugin("unicore-gang-scheduler", gang.New))
 	code := cli.Run(command)
 	os.Exit(code)
 }
