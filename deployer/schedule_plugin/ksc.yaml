@@ -8,12 +8,16 @@ profiles:
       preFilter:
         enabled:
           - name: unicore-gang-scheduler
+      filter:
+        enabled:
+          - name: unicore-reserve-scheduler
       permit:
         enabled:
            - name: unicore-gang-scheduler
       reserve:
         enabled:
           - name: unicore-gang-scheduler
+          - name: unicore-reserve-scheduler
       queueSort:
         enabled:
           - name: unicore-gang-scheduler
